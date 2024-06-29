@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 # Load the Titanic dataset
-file_path = 'C:/Users/majd/Desktop/codsoftDS/Titanic-Dataset.csv'  # Updated path
+file_path = 'C:/Users/majd/Desktop/codsoftDS/Titanic-Dataset.csv'
 titanic_data = pd.read_csv(file_path)
 
 # Data preprocessing
@@ -64,16 +64,28 @@ def predict_survival(pclass, age, sibsp, parch, fare, sex_male, embarked_q, emba
     prediction = model.predict(passenger)
     return 'Survived' if prediction[0] == 1 else 'Not Survived'
 
+# Function to get valid input from the user
+def get_valid_input(prompt, type_func, condition_func):
+    while True:
+        try:
+            value = type_func(input(prompt))
+            if condition_func(value):
+                return value
+            else:
+                print("Invalid value. Please try again.")
+        except ValueError:
+            print("Invalid input. Please enter a valid value.")
+
 # Ask the user for the passenger's information
 print("Please enter the passenger's information:")
-pclass = int(input("Class (1, 2, 3): "))
-age = float(input("Age: "))
-sibsp = int(input("Number of siblings/spouses aboard: "))
-parch = int(input("Number of parents/children aboard: "))
-fare = float(input("Fare paid for the ticket: "))
-sex = input("Sex (male/female): ")
+pclass = get_valid_input("Class (1, 2, 3): ", int, lambda x: x in [1, 2, 3])
+age = get_valid_input("Age: ", float, lambda x: x > 0)
+sibsp = get_valid_input("Number of siblings/spouses aboard: ", int, lambda x: x >= 0)
+parch = get_valid_input("Number of parents/children aboard: ", int, lambda x: x >= 0)
+fare = get_valid_input("Fare paid for the ticket: ", float, lambda x: x >= 0)
+sex = get_valid_input("Sex (male/female): ", str, lambda x: x.lower() in ['male', 'female'])
 sex_male = 1 if sex.lower() == 'male' else 0
-embarked = input("Port of embarkation (C = Cherbourg, Q = Queenstown, S = Southampton): ")
+embarked = get_valid_input("Port of embarkation (C = Cherbourg, Q = Queenstown, S = Southampton): ", str, lambda x: x.lower() in ['c', 'q', 's'])
 embarked_q = 1 if embarked.lower() == 'q' else 0
 embarked_s = 1 if embarked.lower() == 's' else 0
 
